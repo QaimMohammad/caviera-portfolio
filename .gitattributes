@@ -1,0 +1,6 @@
+# Never apply line-ending conversion to binary assets —
+# autocrlf on Windows can silently corrupt them on checkout.
+*.pdf  binary
+*.webp binary
+*.png  binary
+*.jpg  binary

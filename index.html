@@ -1465,13 +1465,6 @@ a { color: inherit; }
     <symbol id="t-express" viewBox="0 0 16 16">
       <path d="M2 8 H11 M2 8 L5 5 M2 8 L5 11 M11 8 Q14 8 14 5 M11 8 Q14 8 14 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
-    <symbol id="t-railway" viewBox="0 0 16 16">
-      <g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-        <path d="M3 2 V14"/>
-        <path d="M13 2 V14"/>
-        <path d="M3 5 H13 M3 8 H13 M3 11 H13"/>
-      </g>
-    </symbol>
     <symbol id="t-html" viewBox="0 0 16 16">
       <path d="M2 2 L3 14 L8 15 L13 14 L14 2 Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
       <path d="M5 6 H11 L10.5 10 L8 11 L5.5 10" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1607,6 +1600,9 @@ a { color: inherit; }
           I like owning the full stack because that's where I learned, and because handoffs between three contractors are where most projects quietly die. One person who understands your schema, your API, and your UI will ship faster than a team that has to sync on Slack.
         </p>
         <p>
+          These days I also work as a full-stack developer intern at Developer Hub Corporation, shipping production features — React storefronts, Express APIs, role-restricted admin panels — inside a professional engineering team.
+        </p>
+        <p>
           Most of what I build is under NDA, which is why you're only seeing three projects below. The work is real, the clients are real, and if you want references I can get you introductions.
         </p>
         <p class="about-kicker">
@@ -1640,7 +1636,7 @@ a { color: inherit; }
         <div class="fact-card">
           <span class="fc-label">Core stack</span>
           <span class="fc-value">TypeScript · Next.js · Node</span>
-          <span class="fc-meta">MySQL · Prisma · Redis</span>
+          <span class="fc-meta">MySQL · Prisma · Redis · SQLite</span>
         </div>
         <div class="fact-card">
           <span class="fc-label">Engineering signals</span>
@@ -1670,7 +1666,7 @@ a { color: inherit; }
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · polygazeio.vercel.app</span>
-        <img src="https://caviera.netlify.app/previews/polywatch.webp" alt="PolyWatch dashboard screenshot" loading="lazy">
+        <img src="previews/polywatch.webp" alt="PolyWatch dashboard screenshot" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.01 / Real-Time Dashboard</span>
@@ -1733,8 +1729,8 @@ a { color: inherit; }
     <!-- Project 2 -->
     <div class="project reverse reveal">
       <div class="project-visual">
-        <span class="marker"><span class="live-dot"></span> LIVE · exam-prep.up.railway.app</span>
-        <img src="https://caviera.netlify.app/previews/examprep.webp" alt="ExamPrep login screen" loading="lazy">
+        <span class="marker"><span class="live-dot"></span> LIVE · exam-prep-platform-sandy.vercel.app</span>
+        <img src="previews/examprep.webp" alt="ExamPrep login screen" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.02 / Education Platform</span>
@@ -1757,10 +1753,10 @@ a { color: inherit; }
           </div>
         </div>
         <div class="project-actions">
-          <a class="project-cta" href="https://exam-prep.up.railway.app" target="_blank" rel="noopener" data-hover>
+          <a class="project-cta" href="https://exam-prep-platform-sandy.vercel.app" target="_blank" rel="noopener" data-hover>
             Open Project <span>→</span>
           </a>
-          <a class="project-source" href="https://github.com/QaimMohammad" target="_blank" rel="noopener" data-hover>
+          <a class="project-source" href="https://github.com/QaimMohammad/exam-prep-platform" target="_blank" rel="noopener" data-hover>
             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.3 9.4 7.88 10.92.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.07 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.6.23 2.78.11 3.07.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.4-5.26 5.69.41.35.78 1.05.78 2.11v3.13c0 .31.21.67.8.55C20.2 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
             Source <span>↗</span>
           </a>
@@ -1770,9 +1766,9 @@ a { color: inherit; }
           <div class="tech-stack">
             <span class="tech-pill"><svg><use href="#t-node"/></svg>Node.js</span>
             <span class="tech-pill"><svg><use href="#t-express"/></svg>Express</span>
-            <span class="tech-pill"><svg><use href="#t-db"/></svg>SQLite</span>
+            <span class="tech-pill"><svg><use href="#t-db"/></svg>Turso · SQLite</span>
             <span class="tech-pill"><svg><use href="#t-jwt"/></svg>JWT Auth</span>
-            <span class="tech-pill"><svg><use href="#t-railway"/></svg>Railway</span>
+            <span class="tech-pill"><svg><use href="#t-vercel"/></svg>Vercel</span>
           </div>
         </div>
         <details class="eng-notes">
@@ -1783,8 +1779,9 @@ a { color: inherit; }
           </summary>
           <ul>
             <li>Migrated database from in-memory sql.js to better-sqlite3 in WAL mode, eliminating a silent write-loss race condition under concurrent requests.</li>
+            <li>Re-architected for serverless: async dual-backend data layer runs better-sqlite3 locally and Turso (hosted libSQL) in production, so deploys never touch user data.</li>
             <li>JWT in httpOnly cookies, bcrypt (cost 12), CSP-hardened front-end with zero inline scripts, Helmet + scoped per-route rate limiting.</li>
-            <li>Graceful SIGTERM shutdown, <code>/healthz</code> endpoint for uptime monitoring, zero-downtime deploys on Railway.</li>
+            <li>Static pages on Vercel's CDN with the API as a serverless function; <code>/healthz</code> for uptime monitoring, zero-downtime deploys.</li>
             <li>Sequential day-by-day curriculum unlock logic with per-student progress tracking; admin panel for content and user management.</li>
           </ul>
         </details>
@@ -1795,7 +1792,7 @@ a { color: inherit; }
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · alhamdgranitemarble.com</span>
-        <img src="https://caviera.netlify.app/previews/alhamd.webp" alt="Al-Hamd Granite & Marble homepage" loading="lazy">
+        <img src="previews/alhamd.webp" alt="Al-Hamd Granite & Marble homepage" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.03 / B2B Business Site</span>
@@ -2200,6 +2197,7 @@ a { color: inherit; }
   // ---------- Ticker content ----------
   const tickerItems = [
     { label: 'Status', value: 'Accepting projects' },
+    { label: 'Currently', value: 'Full-Stack Intern @ Developer Hub' },
     { label: 'Delivered', value: '15+ shipped · most under NDA' },
     { label: 'Experience', value: '2+ yrs shipping production code' },
     { label: 'Primary', value: 'Email · khurshidqaim@gmail.com' },
