@@ -5,14 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caviera · Qaim Khurshid · Full-Stack Engineer</title>
 <meta name="description" content="Full-stack engineer shipping production web apps end-to-end. Next.js, Node, real-time dashboards, business sites. Available for project work and full-time roles.">
+<meta name="theme-color" content="#0B0B0D">
+<link rel="canonical" href="https://caviera-portfolio.vercel.app/">
 <meta property="og:title" content="Caviera · Qaim Khurshid · Full-Stack Engineer">
 <meta property="og:description" content="Ships production web apps end-to-end. Available for project work and full-time roles.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://caviera-portfolio.vercel.app/">
+<meta property="og:image" content="https://caviera-portfolio.vercel.app/previews/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://caviera-portfolio.vercel.app/previews/og.png">
+<script>document.documentElement.classList.add('js');</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Qaim Mohammad Khurshid",
+  "alternateName": "Caviera",
+  "jobTitle": "Full-Stack Engineer",
+  "url": "https://caviera-portfolio.vercel.app/",
+  "email": "mailto:khurshidqaim@gmail.com",
+  "sameAs": ["https://github.com/QaimMohammad"]
+}
+</script>
 <link rel="icon" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%230B0B0D%22/%3E%3Cpath%20d%3D%22M4%204%20H25%20L28%207%20V10%20H11%20V22%20H28%20V25%20L25%2028%20H4%20Z%22%20fill%3D%22%23EFEAE0%22/%3E%3Crect%20x%3D%2220%22%20y%3D%2214%22%20width%3D%224%22%20height%3D%224%22%20fill%3D%22%23FF5A1F%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 :root {
   --bg: #0B0B0D;
@@ -23,7 +44,7 @@
   --line-hover: #35353F;
   --text: #EFEAE0;
   --text-2: #9A968C;
-  --text-3: #5C5A54;
+  --text-3: #7D7970;
   --text-4: #3A3833;
   --accent: #FF5A1F;
   --accent-hover: #FF7A44;
@@ -41,8 +62,9 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  cursor: none;
 }
+/* Hide the native cursor only when JS is running (it draws the custom one) */
+html.js body { cursor: none; }
 
 /* Grain overlay for analog warmth */
 body::before {
@@ -93,7 +115,7 @@ body::before {
   background: rgba(255, 90, 31, 0.08);
 }
 @media (hover: none), (max-width: 768px) {
-  body { cursor: auto; }
+  html.js body { cursor: auto; }
   .cursor, .cursor-ring { display: none; }
 }
 
@@ -169,7 +191,12 @@ nav a:hover { color: var(--text); }
 }
 
 @media (max-width: 900px) {
-  nav ul, .status-chip { display: none; }
+  /* Keep a compact Work / Contact nav on small screens instead of nothing */
+  .status-chip { display: none; }
+  nav ul { gap: 16px; }
+  nav li { display: none; }
+  nav li:nth-child(2), nav li:nth-child(5) { display: block; }
+  nav a::before { content: none; }
 }
 
 /* =================== HERO =================== */
@@ -294,11 +321,12 @@ h1 .block:nth-child(3) > span { animation-delay: 0.4s; }
   border: 1px solid var(--line);
   color: var(--text);
   background: transparent;
-  cursor: none;
+  cursor: pointer;
   transition: all 0.25s;
   position: relative;
   overflow: hidden;
 }
+html.js .btn, html.js .eng-notes summary, html.js .faq-item summary { cursor: none; }
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
@@ -773,7 +801,7 @@ section { padding: 140px 0; position: relative; }
 .eng-notes summary {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 0 12px;
-  cursor: none;
+  cursor: pointer;
   list-style: none;
   user-select: none;
 }
@@ -1031,7 +1059,7 @@ section { padding: 140px 0; position: relative; }
   grid-template-columns: 80px 1fr 40px;
   gap: 24px;
   padding: 28px 20px;
-  cursor: none;
+  cursor: pointer;
   list-style: none;
   align-items: baseline;
   transition: padding 0.25s;
@@ -1245,6 +1273,11 @@ section { padding: 140px 0; position: relative; }
   line-height: 1;
   color: var(--accent);
 }
+.pricing-anchor .p-amount-text {
+  font-size: clamp(38px, 4.5vw, 54px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
 .pricing-anchor .p-currency {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 13px;
@@ -1348,13 +1381,23 @@ footer {
   .footer-base { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
 
-/* Reveal on scroll */
-.reveal {
+/* Reveal on scroll — only hidden when JS is available to reveal it */
+.reveal { transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+html.js .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+html.js .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Respect reduced-motion: finish all animations instantly, kill smooth scroll */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 /* Link underlines */
 a { color: inherit; }
@@ -1666,7 +1709,7 @@ a { color: inherit; }
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · polygazeio.vercel.app</span>
-        <img src="previews/polywatch.webp" alt="PolyWatch dashboard screenshot" loading="lazy">
+        <img src="previews/polywatch.webp" alt="PolyWatch dashboard screenshot" width="1163" height="562" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.01 / Real-Time Dashboard</span>
@@ -1692,7 +1735,7 @@ a { color: inherit; }
           <a class="project-cta" href="https://polygazeio.vercel.app" target="_blank" rel="noopener" data-hover>
             Open Project <span>→</span>
           </a>
-          <a class="project-source" href="https://github.com/QaimMohammad" target="_blank" rel="noopener" data-hover>
+          <a class="project-source" href="https://github.com/QaimMohammad/polywatch" target="_blank" rel="noopener" data-hover>
             <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.3 9.4 7.88 10.92.58.1.79-.25.79-.56v-2.01c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.07 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.6.23 2.78.11 3.07.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.4-5.26 5.69.41.35.78 1.05.78 2.11v3.13c0 .31.21.67.8.55C20.2 21.4 23.5 17.09 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
             Source <span>↗</span>
           </a>
@@ -1730,7 +1773,7 @@ a { color: inherit; }
     <div class="project reverse reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · exam-prep-platform-sandy.vercel.app</span>
-        <img src="previews/examprep.webp" alt="ExamPrep login screen" loading="lazy">
+        <img src="previews/examprep.webp" alt="ExamPrep login screen" width="981" height="727" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.02 / Education Platform</span>
@@ -1740,8 +1783,8 @@ a { color: inherit; }
         </p>
         <div class="project-stats">
           <div class="cell">
-            <div class="v">2<span class="u">-role</span></div>
-            <div class="l">Student · Admin</div>
+            <div class="v">$0<span class="u">/mo</span></div>
+            <div class="l">Infra cost</div>
           </div>
           <div class="cell">
             <div class="v">0<span class="u">s</span></div>
@@ -1792,7 +1835,7 @@ a { color: inherit; }
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · alhamdgranitemarble.com</span>
-        <img src="previews/alhamd.webp" alt="Al-Hamd Granite & Marble homepage" loading="lazy">
+        <img src="previews/alhamd.webp" alt="Al-Hamd Granite & Marble homepage" width="1656" height="881" loading="lazy">
       </div>
       <div class="project-info">
         <span class="project-tag">§ 01.03 / B2B Business Site</span>
@@ -2066,17 +2109,16 @@ a { color: inherit; }
         <div class="pricing-block">
           <div class="pricing-head">
             <span class="pricing-eyebrow">Pricing</span>
-            <span class="pricing-note">Fixed scope · Fixed price · Quote before we start</span>
+            <span class="pricing-note">Fixed scope · Fixed price · No hourly billing</span>
           </div>
           <div class="pricing-body">
             <div class="pricing-anchor">
-              <span class="p-from">From</span>
-              <span class="p-amount">$20</span>
-              <span class="p-currency">USD</span>
+              <span class="p-amount p-amount-text">Fixed<br>quote</span>
+              <span class="p-currency">before we start</span>
             </div>
             <div class="pricing-detail">
-              <p>Entry price covers <strong>simple sites and scripts</strong>. Single-page landers, basic Discord bots, small automation tasks.</p>
-              <p>Larger builds (dashboards, full-stack apps, custom integrations) scale with scope. <strong>I'll quote a firm number before any work starts.</strong> No hourly billing surprises.</p>
+              <p>Every project gets a <strong>written scope and a firm number</strong> before any work begins. Single-page landers and small scripts sit at the low end; dashboards, full-stack apps, and custom integrations scale with scope.</p>
+              <p><strong>No hourly billing surprises.</strong> The number we agree on is the number you pay.</p>
             </div>
           </div>
         </div>
@@ -2204,7 +2246,7 @@ a { color: inherit; }
     { label: 'GitHub', value: '@QaimMohammad' },
     { label: 'Reply', value: '< 24h typical' },
     { label: 'Billing', value: 'Fixed scope · Fixed price' },
-    { label: 'Starts at', value: '$20 · scales w/ scope' },
+    { label: 'Pricing', value: 'Fixed quote before we start' },
     { label: 'Mode', value: 'Solo · No handoffs' },
     { label: 'Working', value: 'Remote · Worldwide' },
   ];

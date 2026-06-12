@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=IBM+Plex+Mono:wght@400;500&family=Archivo:wght@800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #0B0B0D;
+    color: #EFEAE0;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    position: relative;
+    padding: 56px 64px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(#23232C 1px, transparent 1px),
+      linear-gradient(90deg, #23232C 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse 80% 70% at 45% 35%, #000 20%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 45% 35%, #000 20%, transparent 78%);
+  }
+  .glow {
+    position: absolute; top: -35%; right: -12%;
+    width: 640px; height: 640px;
+    background: radial-gradient(circle, rgba(255,90,31,0.14), transparent 60%);
+  }
+  .row { position: relative; display: flex; justify-content: space-between; align-items: center; }
+  .mark { display: flex; align-items: center; gap: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 20px; letter-spacing: 0.1em; }
+  .mark svg { width: 40px; height: 40px; }
+  .chip { display: flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; letter-spacing: 0.08em; color: #9A968C; border: 1px solid #23232C; border-radius: 100px; padding: 9px 18px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #7FB069; box-shadow: 0 0 0 4px rgba(127,176,105,0.15); }
+  .meta { position: relative; font-family: 'IBM Plex Mono', monospace; font-size: 16px; letter-spacing: 0.18em; color: #7D7970; margin-bottom: 26px; }
+  h1 { position: relative; font-family: 'Archivo', sans-serif; font-weight: 800; font-size: 108px; line-height: 0.9; letter-spacing: -0.045em; }
+  h1 .italic { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: #FF5A1F; }
+  .base { position: relative; display: flex; justify-content: space-between; align-items: flex-end; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.1em; }
+  .who { font-size: 19px; color: #EFEAE0; }
+  .who span { color: #7D7970; }
+  .url { font-size: 17px; color: #FF5A1F; }
+  .rule { position: relative; height: 1px; background: #23232C; margin-bottom: 22px; }
+</style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="glow"></div>
+  <div class="row">
+    <div class="mark">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M4 4 H25 L28 7 V10 H11 V22 H28 V25 L25 28 H4 Z" fill="#EFEAE0"/><rect x="20" y="14" width="4" height="4" fill="#FF5A1F"/></svg>
+      <span>CAVIERA</span>
+    </div>
+    <div class="chip"><span class="dot"></span> ACCEPTING PROJECTS</div>
+  </div>
+  <div>
+    <div class="meta">— QAIM KHURSHID · FULL-STACK ENGINEER · REMOTE</div>
+    <h1>Ships that<br><span class="italic">actually</span> leave port.</h1>
+  </div>
+  <div>
+    <div class="rule"></div>
+    <div class="base">
+      <div class="who">Production web apps, <span>end-to-end</span></div>
+      <div class="url">caviera-portfolio.vercel.app</div>
+    </div>
+  </div>
+</body>
+</html>
