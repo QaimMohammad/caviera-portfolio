@@ -16,7 +16,19 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://caviera-portfolio.vercel.app/previews/og.png">
-<script>document.documentElement.classList.add('js');</script>
+<script>
+(function () {
+  var d = document.documentElement;
+  d.classList.add('js');
+  // Hide hero-entrance elements until anime.js reveals them. Skipped for
+  // reduced-motion, and a failsafe removes it if the module never loads
+  // (blocked CDN, no ES modules) so content is never stuck hidden.
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    d.classList.add('preload');
+    setTimeout(function () { d.classList.remove('preload'); }, 1800);
+  }
+})();
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -32,6 +44,7 @@
 <link rel="icon" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%230B0B0D%22/%3E%3Cpath%20d%3D%22M4%204%20H25%20L28%207%20V10%20H11%20V22%20H28%20V25%20L25%2028%20H4%20Z%22%20fill%3D%22%23EFEAE0%22/%3E%3Crect%20x%3D%2220%22%20y%3D%2214%22%20width%3D%224%22%20height%3D%224%22%20fill%3D%22%23FF5A1F%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
@@ -50,6 +63,14 @@
   --accent-hover: #FF7A44;
   --amber: #E8B547;
   --signal: #7FB069;
+
+  /* Warm off-white "paper" system — used for the inverted spec-sheet section */
+  --paper: #ECE5D5;
+  --paper-2: #E3DAC6;
+  --paper-line: #CDC1A8;
+  --ink: #1A1712;
+  --ink-2: #4C463A;
+  --ink-3: #6E6656;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -75,15 +96,38 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Faint engineering grid */
+/* WebGL shader atmosphere — sits behind everything, painted by Three.js.
+   Fades in only once the renderer is live; if WebGL/CDN is unavailable the
+   grid + solid --bg below still carry the look. */
+.shader-canvas {
+  position: fixed; inset: 0; z-index: -3;
+  width: 100%; height: 100%;
+  display: block; pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.shader-canvas.ready { opacity: 1; }
+
+/* Faint engineering grid — layered just above the shader for the blueprint feel */
 .grid-bg {
   position: fixed; inset: 0; z-index: -2;
   background-image:
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 80px 80px;
-  opacity: 0.35;
+  opacity: 0.3;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 20%, transparent 75%);
+}
+
+/* Scroll progress — thin machined rail across the very top */
+.scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px; width: 100%;
+  transform: scaleX(0); transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent), var(--amber));
+  z-index: 300;
+  pointer-events: none;
+  will-change: transform;
 }
 
 .mono { font-family: 'IBM Plex Mono', monospace; }
@@ -249,15 +293,22 @@ h1 .block {
 }
 h1 .block > span {
   display: inline-block;
-  transform: translateY(110%);
-  animation: riseUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-h1 .block:nth-child(1) > span { animation-delay: 0.1s; }
-h1 .block:nth-child(2) > span { animation-delay: 0.25s; }
-h1 .block:nth-child(3) > span { animation-delay: 0.4s; }
-@keyframes riseUp {
-  to { transform: translateY(0); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
+/* Hero entrance is driven by anime.js. The `preload` class (added inline before
+   paint, and removed either by anime or by a failsafe timeout) hides these until
+   the timeline runs. Without JS / with reduced-motion they simply stay visible. */
+html.preload .hero-meta,
+html.preload .hero-sub,
+html.preload .cta-row,
+html.preload .fulltime-link,
+html.preload .panel,
+html.preload .scroll-ind { opacity: 0; }
+html.preload .hero h1 .block > span { transform: translateY(110%); }
 
 .hero-sub {
   font-size: 18px;
@@ -265,18 +316,10 @@ h1 .block:nth-child(3) > span { animation-delay: 0.4s; }
   max-width: 560px;
   line-height: 1.5;
   margin-bottom: 48px;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.7s ease-out forwards;
-}
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .cta-row {
   display: flex; gap: 14px; flex-wrap: wrap;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.9s ease-out forwards;
 }
 
 .fulltime-link {
@@ -292,8 +335,6 @@ h1 .block:nth-child(3) > span { animation-delay: 0.4s; }
   border: 1px dashed var(--line);
   background: var(--bg-2);
   transition: all 0.25s;
-  opacity: 0;
-  animation: fadeUp 0.8s 1.1s ease-out forwards;
 }
 .fulltime-link:hover {
   color: var(--accent);
@@ -344,14 +385,28 @@ html.js .btn, html.js .eng-notes summary, html.js .faq-item summary { cursor: no
 .btn .arrow { transition: transform 0.3s; }
 .btn:hover .arrow { transform: translateX(4px); }
 
-/* Control panel in hero */
+/* Control panel in hero — a machined telemetry instrument */
 .panel {
   border: 1px solid var(--line);
-  background: var(--surface);
-  padding: 20px;
-  opacity: 0;
-  animation: fadeUp 0.8s 1s ease-out forwards;
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 24px 50px -30px rgba(0, 0, 0, 0.85);
 }
+/* Registration corner ticks */
+.panel-corner {
+  position: absolute; width: 9px; height: 9px;
+  border: 1px solid var(--line-hover);
+  opacity: 0.55; pointer-events: none;
+}
+.panel-corner.tl { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
+.panel-corner.tr { top: 6px; right: 6px; border-left: 0; border-bottom: 0; }
+.panel-corner.bl { bottom: 6px; left: 6px; border-right: 0; border-top: 0; }
+.panel-corner.br { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+
 .panel-header {
   display: flex; justify-content: space-between; align-items: center;
   padding-bottom: 14px;
@@ -363,6 +418,15 @@ html.js .btn, html.js .eng-notes summary, html.js .faq-item summary { cursor: no
   text-transform: uppercase;
   color: var(--text-3);
 }
+.panel-id { display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+.panel-led {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 3px rgba(127, 176, 105, 0.15);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+.panel-clock { color: var(--text-3); font-variant-numeric: tabular-nums; }
+
 .panel-rows { display: grid; gap: 10px; }
 .panel-row {
   display: flex; justify-content: space-between; align-items: center;
@@ -381,20 +445,39 @@ html.js .btn, html.js .eng-notes summary, html.js .faq-item summary { cursor: no
 }
 .panel-row .value.hot { color: var(--accent); }
 .panel-row .value.ok { color: var(--signal); }
-.panel-waves {
+
+/* Live-signal oscilloscope — smooth canvas waveform */
+.panel-scope {
   margin-top: 16px;
-  height: 36px;
-  display: flex; align-items: end; gap: 3px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
 }
-.panel-waves .bar {
-  flex: 1;
-  background: var(--accent);
-  opacity: 0.3;
-  animation: wave 1.4s ease-in-out infinite;
+.scope-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
-@keyframes wave {
-  0%, 100% { height: 20%; opacity: 0.25; }
-  50% { height: 100%; opacity: 0.7; }
+.scope-label { color: var(--text-3); }
+.scope-read { display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+.scope-read #pingVal { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+.scope-unit { color: var(--text-3); margin-left: -4px; }
+.scope-state { color: var(--signal); position: relative; padding-left: 13px; }
+.scope-state::before {
+  content: ''; position: absolute; left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 6px var(--signal);
+}
+.scope-canvas {
+  width: 100%; height: 54px; display: block;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, rgba(255,90,31,0.015), transparent),
+    repeating-linear-gradient(90deg, transparent 0 19px, rgba(154,150,140,0.04) 19px 20px);
 }
 
 .scroll-ind {
@@ -406,8 +489,6 @@ html.js .btn, html.js .eng-notes summary, html.js .faq-item summary { cursor: no
   text-transform: uppercase;
   color: var(--text-3);
   display: flex; align-items: center; gap: 12px;
-  opacity: 0;
-  animation: fadeUp 0.8s 1.3s ease-out forwards;
 }
 .scroll-ind::before {
   content: '';
@@ -1044,6 +1125,38 @@ section { padding: 140px 0; position: relative; }
   .step:last-child { border-bottom: none; }
 }
 
+/* Off-white "spec sheet" — an inverted printed-paper panel for editorial contrast.
+   Deliberately warm ink-on-paper against the dark blueprint everywhere else. */
+.process-grid.paper {
+  background: var(--paper);
+  border-color: var(--paper-line);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.25) inset,
+    0 30px 60px -30px rgba(0, 0, 0, 0.7),
+    0 2px 12px -6px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+/* Punched register holes down the left edge, like a torn spec sheet */
+.process-grid.paper::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 22px;
+  background-image: radial-gradient(circle at 11px 50%, var(--bg) 2.5px, transparent 3px);
+  background-size: 22px 34px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.process-grid.paper .step { border-color: var(--paper-line); }
+.process-grid.paper .step:hover { background: var(--paper-2); }
+.process-grid.paper .step-num { color: var(--accent); }
+.process-grid.paper .step h4 { color: var(--ink); }
+.process-grid.paper .step p { color: var(--ink-2); }
+.process-grid.paper .step-meta {
+  color: var(--ink-3);
+  border-color: var(--paper-line);
+}
+
 /* =================== FAQ =================== */
 .faq-list {
   border-top: 1px solid var(--line);
@@ -1205,6 +1318,9 @@ section { padding: 140px 0; position: relative; }
   font-size: 22px;
   letter-spacing: -0.02em;
   margin-bottom: 6px;
+  /* Long unbroken values (email address) must wrap on narrow cards
+     instead of overflowing and being clipped by .contact-wrap */
+  overflow-wrap: anywhere;
 }
 .cm.primary { background: var(--accent); color: #0B0B0D; }
 .cm.primary .cm-label { color: rgba(11, 11, 13, 0.75); }
@@ -1325,6 +1441,11 @@ section { padding: 140px 0; position: relative; }
 @media (max-width: 900px) {
   .contact-wrap { padding: 48px 28px; }
   .contact-methods { grid-template-columns: 1fr; }
+  .cm { min-height: 0; padding: 24px; }
+}
+@media (max-width: 480px) {
+  .contact-wrap { padding: 36px 20px; }
+  .cm .cm-value { font-size: 19px; }
 }
 
 /* =================== FOOTER =================== */
@@ -1567,7 +1688,9 @@ a { color: inherit; }
 </svg>
 
 
+<canvas class="shader-canvas" aria-hidden="true"></canvas>
 <div class="grid-bg"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
 <div class="cursor"></div>
 <div class="cursor-ring"></div>
 
@@ -1631,9 +1754,11 @@ a { color: inherit; }
       </div>
 
       <div class="panel">
+        <span class="panel-corner tl"></span><span class="panel-corner tr"></span>
+        <span class="panel-corner bl"></span><span class="panel-corner br"></span>
         <div class="panel-header">
-          <span>SYS // STATUS</span>
-          <span id="sysTime">—</span>
+          <span class="panel-id"><span class="panel-led"></span>SYS // STATUS</span>
+          <span id="sysTime" class="panel-clock">—</span>
         </div>
         <div class="panel-rows">
           <div class="panel-row"><span class="label">Status</span><span class="value ok">ACCEPTING</span></div>
@@ -1643,7 +1768,13 @@ a { color: inherit; }
           <div class="panel-row"><span class="label">Email</span><span class="value hot">khurshidqaim@gmail.com</span></div>
           <div class="panel-row"><span class="label">GitHub</span><a href="https://github.com/QaimMohammad" target="_blank" rel="noopener" class="value" style="text-decoration:none;">@QaimMohammad ↗</a></div>
         </div>
-        <div class="panel-waves" id="waves"></div>
+        <div class="panel-scope">
+          <div class="scope-top">
+            <span class="scope-label">Live signal</span>
+            <span class="scope-read"><span id="pingVal">—</span><span class="scope-unit">ms</span><span class="scope-state">Stable</span></span>
+          </div>
+          <canvas id="scope" class="scope-canvas" aria-hidden="true"></canvas>
+        </div>
       </div>
     </div>
 
@@ -2059,7 +2190,7 @@ a { color: inherit; }
       <div class="sec-meta">No agency layers<br>No mystery phases</div>
     </div>
 
-    <div class="process-grid reveal">
+    <div class="process-grid paper reveal">
       <div class="step">
         <div class="step-num">i.</div>
         <h4>We talk</h4>
@@ -2329,15 +2460,88 @@ a { color: inherit; }
   updateTimes();
   setInterval(updateTimes, 1000);
 
-  // ---------- Audio-style waveform bars ----------
-  const waves = document.getElementById('waves');
-  if (waves) {
-    for (let i = 0; i < 22; i++) {
-      const b = document.createElement('div');
-      b.className = 'bar';
-      b.style.animationDelay = (i * 0.08) + 's';
-      b.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
-      waves.appendChild(b);
+  // ---------- Telemetry oscilloscope (smooth canvas waveform) ----------
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scope = document.getElementById('scope');
+  if (scope && scope.getContext) {
+    const ctx = scope.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const accent = (getComputedStyle(document.documentElement)
+      .getPropertyValue('--accent').trim()) || '#FF5A1F';
+    let W = 0, H = 0;
+    const sizeScope = () => {
+      const r = scope.getBoundingClientRect();
+      if (!r.width) return;
+      W = r.width; H = r.height;
+      scope.width = Math.round(W * dpr);
+      scope.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    sizeScope();
+    window.addEventListener('resize', sizeScope, { passive: true });
+
+    // Amplitude eased toward a target so the trace "breathes" smoothly
+    let phase = 0, amp = 0.5, ampTarget = 0.5;
+    const waveY = (nx, ph) => {
+      const env = 0.35 + 0.65 * Math.sin(nx * Math.PI);     // taper both ends
+      return H / 2
+        + Math.sin(nx * 11.0 + ph) * (H * 0.22 * amp) * env
+        + Math.sin(nx * 24.0 - ph * 1.7) * (H * 0.07) * env;
+    };
+    const drawScope = () => {
+      if (!W) { sizeScope(); }
+      ctx.clearRect(0, 0, W, H);
+
+      // centre reference line
+      ctx.strokeStyle = 'rgba(154,150,140,0.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+
+      // waveform, fading in/out at the edges via a horizontal gradient
+      ctx.beginPath();
+      for (let x = 0; x <= W; x++) { const y = waveY(x / W, phase); x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0.00, 'rgba(255,90,31,0)');
+      grad.addColorStop(0.14, accent);
+      grad.addColorStop(0.86, accent);
+      grad.addColorStop(1.00, 'rgba(255,90,31,0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.6;
+      ctx.shadowColor = accent; ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // leading probe dot
+      const py = waveY(1, phase);
+      ctx.fillStyle = accent;
+      ctx.beginPath(); ctx.arc(W - 1.5, py, 2, 0, Math.PI * 2); ctx.fill();
+
+      if (reduceMotion) return;   // one static frame, no loop
+      amp += (ampTarget - amp) * 0.03;
+      phase += 0.055;
+      requestAnimationFrame(drawScope);
+    };
+    drawScope();
+    if (!reduceMotion) {
+      setInterval(() => { ampTarget = 0.45 + Math.random() * 0.75; }, 2200);
+    }
+  }
+
+  // ---------- Live ping readout (eased, tabular) ----------
+  const pingEl = document.getElementById('pingVal');
+  if (pingEl) {
+    let cur = 18;
+    pingEl.textContent = '18';
+    if (!reduceMotion) {
+      const settle = (target) => {
+        const step = () => {
+          cur += (target - cur) * 0.25;
+          pingEl.textContent = String(Math.round(cur));
+          if (Math.abs(target - cur) > 0.5) requestAnimationFrame(step);
+        };
+        step();
+      };
+      setInterval(() => settle(14 + Math.round(Math.random() * 9)), 1900);
     }
   }
 
@@ -2373,6 +2577,23 @@ a { color: inherit; }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ---------- Scroll progress rail ----------
+  const progress = document.querySelector('.scroll-progress');
+  if (progress) {
+    let ticking = false;
+    const paint = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const p = max > 0 ? Math.min(doc.scrollTop / max, 1) : 0;
+      progress.style.transform = 'scaleX(' + p + ')';
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
+  }
 
   // ---------- Discord deep-link (app → web fallback) ----------
   const DISCORD_USER = 'cavi_era';
@@ -2444,6 +2665,291 @@ a { color: inherit; }
       btn.addEventListener('mouseleave', () => {
         btn.style.transform = '';
       });
+    });
+  }
+})();
+</script>
+
+<!-- ============================================================
+     WebGL shader atmosphere (Three.js). Progressive enhancement:
+     feature-detected, lazy-loaded, static under reduced-motion,
+     and completely optional — the grid + solid bg carry the look
+     if this never loads.
+     ============================================================ -->
+<script type="module">
+(async () => {
+  const canvas = document.querySelector('.shader-canvas');
+  if (!canvas) return;
+
+  // Bail early if WebGL isn't available at all.
+  const probe = canvas.getContext('webgl2') || canvas.getContext('webgl');
+  if (!probe) return;
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let THREE;
+  try {
+    THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+  } catch (e) { return; }
+
+  const vertexShader = `
+    varying vec2 vUv;
+    void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
+  `;
+
+  const fragmentShader = `
+    precision mediump float;
+    varying vec2 vUv;
+    uniform float uTime;
+    uniform vec2  uRes;
+    uniform vec2  uMouse;
+    uniform vec3  uBg;
+    uniform vec3  uBone;
+    uniform vec3  uAccent;
+
+    // Simplex 2D noise (Ashima / Gustavson)
+    vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
+    vec2 mod289(vec2 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
+    vec3 permute(vec3 x){ return mod289(((x*34.0)+1.0)*x); }
+    float snoise(vec2 v){
+      const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                         -0.577350269189626, 0.024390243902439);
+      vec2 i  = floor(v + dot(v, C.yy));
+      vec2 x0 = v -   i + dot(i, C.xx);
+      vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+      vec4 x12 = x0.xyxy + C.xxzz;
+      x12.xy -= i1;
+      i = mod289(i);
+      vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0))
+                              + i.x + vec3(0.0, i1.x, 1.0));
+      vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+      m = m*m; m = m*m;
+      vec3 x = 2.0 * fract(p * C.www) - 1.0;
+      vec3 h = abs(x) - 0.5;
+      vec3 ox = floor(x + 0.5);
+      vec3 a0 = x - ox;
+      m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+      vec3 g;
+      g.x  = a0.x  * x0.x  + h.x  * x0.y;
+      g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+      return 130.0 * dot(m, g);
+    }
+    float fbm(vec2 p){
+      float v = 0.0, a = 0.5;
+      mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+      for (int i = 0; i < 5; i++) { v += a * snoise(p); p = m * p; a *= 0.5; }
+      return v;
+    }
+
+    void main(){
+      vec2 p = vUv - 0.5;
+      p.x *= uRes.x / uRes.y;
+      float t = uTime * 0.09;
+
+      // Two-stage domain warp → visibly drifting smoke plumes
+      vec2 q = vec2(fbm(p * 1.3 + vec2(0.0, t)),
+                    fbm(p * 1.3 + vec2(3.2, 1.3) - t * 0.7));
+      vec2 r = vec2(fbm(p * 2.4 + q * 1.6 + vec2(1.7, 9.2) + t * 1.1),
+                    fbm(p * 2.4 + q * 1.6 + vec2(8.3, 2.8) - t * 0.9));
+      float n = fbm(p * 2.0 + r * 1.5 + t * 0.5);
+      n = n * 0.5 + 0.5;
+      n = pow(clamp(n, 0.0, 1.0), 1.5);   // punch up contrast → defined wisps
+
+      vec3 col = uBg;
+      // Warm bone smoke — clearly visible now
+      col = mix(col, uBone, smoothstep(0.30, 0.85, n) * 0.20);
+      // Accent gathering in the dense cores
+      col = mix(col, uAccent, smoothstep(0.58, 0.95, n) * 0.14);
+      // Bright filament highlight on the sharpest edge
+      float fil = smoothstep(0.72, 0.82, n) * smoothstep(0.95, 0.82, n);
+      col += uBone * fil * 0.16;
+
+      // Warm plume trailing the cursor
+      vec2 md = p - (uMouse - 0.5) * vec2(uRes.x / uRes.y, 1.0);
+      float d2 = dot(md, md);
+      col += uAccent * exp(-d2 * 2.2) * 0.16;
+      col += uBone   * exp(-d2 * 6.0) * 0.06;
+
+      // Soft vignette — keeps edges grounded, centre readable
+      col *= mix(0.68, 1.02, smoothstep(1.35, 0.1, length(p)));
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  const isMobile = window.innerWidth < 768;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'low-power' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const uniforms = {
+    uTime:   { value: 0 },
+    uRes:    { value: new THREE.Vector2(1, 1) },
+    uMouse:  { value: new THREE.Vector2(0.5, 0.5) },
+    uBg:     { value: new THREE.Color('#0B0B0D') },
+    uBone:   { value: new THREE.Color('#EFEAE0') },
+    uAccent: { value: new THREE.Color('#FF5A1F') },
+  };
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2),
+    new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader, depthWrite: false })
+  );
+  scene.add(mesh);
+
+  function resize() {
+    const w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    const pr = renderer.getPixelRatio();
+    uniforms.uRes.value.set(w * pr, h * pr);
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  const target = { x: 0.5, y: 0.5 };
+  if (window.matchMedia('(hover: hover)').matches) {
+    window.addEventListener('mousemove', (e) => {
+      target.x = e.clientX / window.innerWidth;
+      target.y = 1 - e.clientY / window.innerHeight;
+    }, { passive: true });
+  }
+
+  canvas.classList.add('ready');
+
+  // Reduced-motion: render a single rich static frame, then stop.
+  if (reduce) {
+    uniforms.uTime.value = 2.4;
+    renderer.render(scene, camera);
+    return;
+  }
+
+  let raf = 0, running = true, t0 = performance.now();
+  function frame(now) {
+    if (!running) return;
+    uniforms.uTime.value = (now - t0) / 1000;
+    uniforms.uMouse.value.x += (target.x - uniforms.uMouse.value.x) * 0.05;
+    uniforms.uMouse.value.y += (target.y - uniforms.uMouse.value.y) * 0.05;
+    renderer.render(scene, camera);
+    raf = requestAnimationFrame(frame);
+  }
+  raf = requestAnimationFrame(frame);
+
+  // Pause when the tab is hidden to save battery/GPU.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      running = false;
+      cancelAnimationFrame(raf);
+    } else if (!running) {
+      running = true;
+      t0 = performance.now() - uniforms.uTime.value * 1000;
+      raf = requestAnimationFrame(frame);
+    }
+  });
+})();
+</script>
+
+<!-- ============================================================
+     Motion system (anime.js v4). Orchestrated hero entrance,
+     count-up stats, and scroll-triggered staggers. Independent of
+     the shader module; if this fails to load the site still works.
+     ============================================================ -->
+<script type="module">
+(async () => {
+  const root = document.documentElement;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let A;
+  try {
+    A = await import('https://cdn.jsdelivr.net/npm/animejs@4/+esm');
+  } catch (e) {
+    root.classList.remove('preload'); // reveal the hero even if anime is blocked
+    return;
+  }
+  const { animate, createTimeline, stagger, utils } = A;
+
+  // Hand the hero over to anime and unhide it.
+  root.classList.remove('preload');
+
+  if (!reduce) {
+    // ---- Hero entrance timeline ----
+    const tl = createTimeline({ defaults: { ease: 'outExpo', duration: 850 } });
+    tl.add('.hero-meta span', { opacity: [0, 1], y: [12, 0], delay: stagger(70) }, 0)
+      .add('.hero h1 .block > span', { translateY: ['110%', '0%'], duration: 1050, delay: stagger(95) }, 120)
+      .add('.panel', { opacity: [0, 1], y: [26, 0] }, 380)
+      .add('.panel-row', { opacity: [0, 1], x: [12, 0], delay: stagger(55) }, 560)
+      .add('.hero-sub', { opacity: [0, 1], y: [16, 0] }, 340)
+      .add('.cta-row .btn', { opacity: [0, 1], y: [16, 0], scale: [0.96, 1], delay: stagger(90) }, 520)
+      .add('.fulltime-link', { opacity: [0, 1], y: [12, 0] }, 700)
+      .add('.scroll-ind', { opacity: [0, 1] }, 900);
+
+    // ---- Section-head reveals (num / title / meta cascade) ----
+    utils.$('.sec-head').forEach((head) => {
+      const kids = head.children;
+      utils.set(kids, { opacity: 0 });
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          animate(kids, { opacity: [0, 1], y: [22, 0], duration: 800, ease: 'outExpo', delay: stagger(90) });
+          obs.unobserve(entry.target);
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+      io.observe(head);
+    });
+
+    // ---- Child staggers (containers that don't own a .reveal opacity themselves) ----
+    const staggerGroup = (containerSel, childSel, opts) => {
+      utils.$(containerSel).forEach((container) => {
+        const kids = container.querySelectorAll(childSel);
+        if (!kids.length) return;
+        utils.set(kids, { opacity: 0 });
+        const io = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            animate(kids, {
+              opacity: [0, 1],
+              y: [opts.y ?? 18, 0],
+              scale: opts.scale ? [0.97, 1] : undefined,
+              duration: opts.d ?? 700,
+              ease: opts.ease ?? 'outExpo',
+              delay: stagger(opts.s ?? 60),
+            });
+            obs.unobserve(entry.target);
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        io.observe(container);
+      });
+    };
+    staggerGroup('.about-facts', '.fact-card', { y: 20, s: 70 });
+    staggerGroup('.process-grid', '.step', { y: 26, s: 90 });
+    staggerGroup('.contact-methods', '.cm', { y: 22, s: 80, scale: true });
+
+    // ---- Count-up stat numbers ----
+    utils.$('.project-stats .v').forEach((cell) => {
+      const node = cell.firstChild;
+      if (!node || node.nodeType !== 3) return;
+      const raw = node.nodeValue;
+      // Only count cells that START with a number (optionally behind a symbol
+      // like "$" or "<"). A letter prefix means it's a label (P2P, SEO, JWT) — skip.
+      const m = raw.trim().match(/^([^0-9A-Za-z]*)(\d[\d,]*)(.*)$/);
+      if (!m) return;
+      const prefix = m[1], target = parseInt(m[2].replace(/,/g, ''), 10), tail = m[3];
+      if (isNaN(target) || target === 0) return;
+      node.nodeValue = prefix + '0' + tail;
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const counter = { n: 0 };
+          animate(counter, {
+            n: target,
+            duration: 1300,
+            ease: 'out(3)',
+            onUpdate: () => { node.nodeValue = prefix + Math.round(counter.n) + tail; },
+            onComplete: () => { node.nodeValue = raw; },
+          });
+          obs.unobserve(entry.target);
+        });
+      }, { threshold: 0.5 });
+      io.observe(cell);
     });
   }
 })();
