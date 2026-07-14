@@ -748,6 +748,11 @@ section { padding: 140px 0; position: relative; }
   box-shadow: 0 0 8px var(--signal);
   animation: breathe 2s ease-in-out infinite;
 }
+.project-visual .marker .live-dot.soon {
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+  animation: none;
+}
 
 .project-info { padding: 20px 0; }
 .project-tag {
@@ -1684,6 +1689,23 @@ a { color: inherit; }
         <path d="M10 7.3 L14 5.3 V10.7 L10 8.7 Z"/>
       </g>
     </symbol>
+    <symbol id="t-tailwind" viewBox="0 0 16 16">
+      <g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2.5 8 C3.6 5.5 5.2 5.5 6.6 7 C7.5 8 8.4 8 9.3 7.3"/>
+        <path d="M6.7 9 C7.8 6.5 9.4 6.5 10.8 8 C11.7 9 12.6 9 13.5 8.3"/>
+      </g>
+    </symbol>
+    <symbol id="t-vite" viewBox="0 0 16 16">
+      <path d="M9 1 L4 9 H7.2 L6.5 15 L12 6.5 H8.6 Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="t-clerk" viewBox="0 0 16 16">
+      <circle cx="8" cy="8" r="2" fill="currentColor"/>
+      <path d="M11.5 4.5 A5 5 0 1 0 11.5 11.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="t-stripe" viewBox="0 0 16 16">
+      <rect x="1" y="1" width="14" height="14" rx="2" fill="currentColor"/>
+      <text x="8" y="11.6" font-family="Archivo, sans-serif" font-size="9" font-weight="800" text-anchor="middle" fill="#0B0B0D">S</text>
+    </symbol>
   </defs>
 </svg>
 
@@ -1808,7 +1830,7 @@ a { color: inherit; }
           These days I also work as a full-stack developer intern at Developer Hub Corporation, shipping production features — React storefronts, Express APIs, role-restricted admin panels — inside a professional engineering team.
         </p>
         <p>
-          Most of what I build is under NDA, which is why you're only seeing four projects below. The work is real, the clients are real, and if you want references I can get you introductions.
+          Most of what I build is under NDA, which is why you're only seeing six projects below. The work is real, the clients are real, and if you want references I can get you introductions.
         </p>
         <p class="about-kicker">
           Work with me if you want someone who'll finish the thing, reply within a day, and tell you when an idea won't work <em>before</em> you pay for it.
@@ -1864,17 +1886,146 @@ a { color: inherit; }
     <div class="sec-head">
       <span class="sec-num">§ 01</span>
       <h2 class="sec-title">Live deployments<span class="italic">, real builds.</span></h2>
-      <div class="sec-meta">4 projects<br>deployed &amp; live</div>
+      <div class="sec-meta">6 projects<br>live &amp; upcoming</div>
     </div>
 
     <!-- Project 1 -->
+    <div class="project reveal">
+      <div class="project-visual">
+        <span class="marker"><span class="live-dot"></span> LIVE · hub.gaicc.org</span>
+        <img src="previews/gaicc.webp" alt="GAICC Hub learning portal homepage" width="1440" height="900" loading="lazy">
+      </div>
+      <div class="project-info">
+        <span class="project-tag">§ 01.01 / Team · Production LMS</span>
+        <h3>GAICC Hub <em>· AI-governance certification platform</em></h3>
+        <p class="project-desc">
+          A live learning platform for AI-governance certifications that I help build and maintain as part of a team. Students stream course videos, sit timed mock exams, and earn verifiable certificates — with member pricing, Stripe checkout, and automated invoicing running underneath.
+        </p>
+        <div class="project-stats">
+          <div class="cell">
+            <div class="v">80<span class="u">K</span></div>
+            <div class="l">Registered users</div>
+          </div>
+          <div class="cell">
+            <div class="v">Team</div>
+            <div class="l">Collaborative build</div>
+          </div>
+          <div class="cell">
+            <div class="v">Certs</div>
+            <div class="l">Verifiable credentials</div>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a class="project-cta" href="https://hub.gaicc.org" target="_blank" rel="noopener" data-hover>
+            Open Project <span>→</span>
+          </a>
+          <span class="project-source project-source-private">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Private team repo
+          </span>
+        </div>
+        <div class="project-credentials">
+          <span class="cred-label">Built with · on a team</span>
+          <div class="tech-stack">
+            <span class="tech-pill"><svg><use href="#t-next"/></svg>Next.js 15</span>
+            <span class="tech-pill"><svg><use href="#t-react"/></svg>React 19</span>
+            <span class="tech-pill"><svg><use href="#t-ts"/></svg>TypeScript</span>
+            <span class="tech-pill"><svg><use href="#t-prisma"/></svg>Prisma</span>
+            <span class="tech-pill"><svg><use href="#t-db"/></svg>MySQL</span>
+            <span class="tech-pill"><svg><use href="#t-clerk"/></svg>Clerk</span>
+            <span class="tech-pill"><svg><use href="#t-stripe"/></svg>Stripe</span>
+            <span class="tech-pill"><svg><use href="#t-tailwind"/></svg>Tailwind</span>
+          </div>
+        </div>
+        <details class="eng-notes">
+          <summary>
+            <span class="en-icon" aria-hidden="true">⚙</span>
+            <span class="en-label">Engineering notes</span>
+            <span class="en-toggle">+</span>
+          </summary>
+          <ul>
+            <li>Next.js 15 App Router (React 19, Turbopack) on Vercel, with Prisma modelling courses, enrolments, exam attempts, and issued credentials in MySQL.</li>
+            <li>Authentication runs on Clerk with satellite SSO — members sign in once on the main GAICC site and stay logged in across the hub subdomain.</li>
+            <li>Stripe powers course and membership checkout; paid orders auto-generate PDF invoices (react-pdf / pdf-lib) and sync to Xero for accounting.</li>
+            <li>Timed mock exams are graded server-side; a pass issues a QR-verifiable certificate, emailed via Resend and generated off a BullMQ + Redis job queue.</li>
+            <li>Work happens in a shared repo — short-lived branches → PR into staging → review → promote to production. I've contributed features like the global learner leaderboard.</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project reverse reveal">
+      <div class="project-visual">
+        <span class="marker"><span class="live-dot soon"></span> LAUNCHING SOON · barmocks.com</span>
+        <img src="previews/barmock.webp" alt="Bar Mock landing page with a sample bar-exam mock question" width="1440" height="762" loading="lazy">
+      </div>
+      <div class="project-info">
+        <span class="project-tag">§ 01.02 / Upcoming · EdTech</span>
+        <h3>Bar Mock <em>· timed practice for the bar exam</em></h3>
+        <p class="project-desc">
+          An upcoming quiz website for the bar exams. Candidates take full-length, timed mock tests, get scored section by section, and review every question with the correct answer explained — so they know exactly where they stand before exam day.
+        </p>
+        <div class="project-stats">
+          <div class="cell">
+            <div class="v">10</div>
+            <div class="l">Full mock exams</div>
+          </div>
+          <div class="cell">
+            <div class="v">Timed</div>
+            <div class="l">Real-exam conditions</div>
+          </div>
+          <div class="cell">
+            <div class="v">Review</div>
+            <div class="l">Every answer explained</div>
+          </div>
+        </div>
+        <div class="project-actions">
+          <a class="project-cta" href="https://bar-mock.onrender.com" target="_blank" rel="noopener" data-hover>
+            Preview site <span>→</span>
+          </a>
+          <span class="project-source project-source-private">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Private repo
+          </span>
+        </div>
+        <div class="project-credentials">
+          <span class="cred-label">Built with</span>
+          <div class="tech-stack">
+            <span class="tech-pill"><svg><use href="#t-react"/></svg>React</span>
+            <span class="tech-pill"><svg><use href="#t-ts"/></svg>TypeScript</span>
+            <span class="tech-pill"><svg><use href="#t-vite"/></svg>Vite</span>
+            <span class="tech-pill"><svg><use href="#t-tailwind"/></svg>Tailwind</span>
+            <span class="tech-pill"><svg><use href="#t-express"/></svg>Express</span>
+            <span class="tech-pill"><svg><use href="#t-db"/></svg>Turso · SQLite</span>
+            <span class="tech-pill"><svg><use href="#t-jwt"/></svg>Sessions</span>
+          </div>
+        </div>
+        <details class="eng-notes">
+          <summary>
+            <span class="en-icon" aria-hidden="true">⚙</span>
+            <span class="en-label">Engineering notes</span>
+            <span class="en-toggle">+</span>
+          </summary>
+          <ul>
+            <li>Vite + React + TypeScript front end on a Tailwind v4 design system; Express API backed by libSQL — a local SQLite file in development, hosted Turso in production.</li>
+            <li>Each exam is a locked session: the server records the real start time and grades the answers, so the timer and score can't be tampered with from the browser.</li>
+            <li>Question banks and answer keys stay server-side — the browser only receives the stems and options, then posts answer IDs back to be graded.</li>
+            <li>Real accounts with bcrypt-hashed passwords, httpOnly cookie sessions, email verification, and per-route rate limiting; results are emailed and downloadable as a generated PDF.</li>
+            <li>Section-by-section scoring with full per-question review; an admin dashboard adds mocks from CSV/JSON and tracks submissions and revenue.</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · nexus-pearl-nu.vercel.app</span>
         <img src="previews/nexus.webp" alt="Nexus investor dashboard screenshot" width="1600" height="1000" loading="lazy">
       </div>
       <div class="project-info">
-        <span class="project-tag">§ 01.01 / Full-Stack Platform</span>
+        <span class="project-tag">§ 01.03 / Full-Stack Platform</span>
         <h3>Nexus <em>· investor &amp; entrepreneur collaboration</em></h3>
         <p class="project-desc">
           A full-stack platform connecting investors and entrepreneurs: JWT auth with role-based dashboards, meeting scheduling with conflict detection, peer-to-peer video &amp; voice calls, a document chamber with e-signatures, and a mock payment wallet — all real-time over Socket.IO.
@@ -1932,14 +2083,14 @@ a { color: inherit; }
       </div>
     </div>
 
-    <!-- Project 2 -->
+    <!-- Project 4 -->
     <div class="project reverse reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · polygazeio.vercel.app</span>
         <img src="previews/polywatch.webp" alt="PolyWatch dashboard screenshot" width="1163" height="562" loading="lazy">
       </div>
       <div class="project-info">
-        <span class="project-tag">§ 01.02 / Real-Time Dashboard</span>
+        <span class="project-tag">§ 01.04 / Real-Time Dashboard</span>
         <h3>PolyWatch <em>· live prediction markets feed</em></h3>
         <p class="project-desc">
           Streams prediction market data from Polymarket's public API with sub-5s latency. Users filter by category, bookmark markets, and set price-cross alerts that fire via a daily worker. Redis absorbs 90%+ of the API calls; the free tier survives.
@@ -1996,14 +2147,14 @@ a { color: inherit; }
       </div>
     </div>
 
-    <!-- Project 3 -->
+    <!-- Project 5 -->
     <div class="project reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · exam-prep-platform-sandy.vercel.app</span>
         <img src="previews/examprep.webp" alt="ExamPrep login screen" width="981" height="727" loading="lazy">
       </div>
       <div class="project-info">
-        <span class="project-tag">§ 01.03 / Education Platform</span>
+        <span class="project-tag">§ 01.05 / Education Platform</span>
         <h3>ExamPrep <em>· curriculum that unlocks by day</em></h3>
         <p class="project-desc">
           A full study platform where students get a fresh set of lessons each day. Admin panel manages content and users, progress tracking per student, encrypted auth. Built and deployed solo. Database, backend, frontend, infra.
@@ -2058,14 +2209,14 @@ a { color: inherit; }
       </div>
     </div>
 
-    <!-- Project 4 -->
+    <!-- Project 6 -->
     <div class="project reverse reveal">
       <div class="project-visual">
         <span class="marker"><span class="live-dot"></span> LIVE · alhamdgranitemarble.com</span>
         <img src="previews/alhamd.webp" alt="Al-Hamd Granite & Marble homepage" width="1656" height="881" loading="lazy">
       </div>
       <div class="project-info">
-        <span class="project-tag">§ 01.04 / B2B Business Site</span>
+        <span class="project-tag">§ 01.06 / B2B Business Site</span>
         <h3>Al-Hamd Granite <em>· generating real leads, in production.</em></h3>
         <p class="project-desc">
           A production B2B site for a marble supplier. Customers browse product categories and send pre-filled WhatsApp inquiries with one tap. SEO-ranked, Google Maps integrated, currently generating real sales leads each month.
